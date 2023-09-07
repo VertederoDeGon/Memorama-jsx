@@ -1,0 +1,23 @@
+#root {
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  scrollbar-width: thin;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* TO USE ON INSANE MODE*/
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
