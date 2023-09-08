@@ -1,12 +1,6 @@
-import { useContext } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
 import { GameInformationContext } from '../Contexts/informationContext'
-
-const DEFAULT_DIFFICULTIES = {
-  EASY: ['Easy', 30],
-  NORMAL: ['Normal', 25],
-  HARD: ['Hard', 20],
-  INSANE: ['Insane', 15]
-}
+import { DEFAULT_DIFFICULTIES } from '../utils/difficulties'
 
 export function useGameInformationManagement () {
   const gameInformation = useContext(GameInformationContext)
@@ -16,25 +10,64 @@ export function useGameInformationManagement () {
     )
 
   const {
-    attempts,
-    difficulty,
-    blunders,
+    win,
     hits,
+    blunders,
+    attempts,
+    resetGame,
+    difficulty,
+    setWin,
     setHits,
     setBlunders,
     setAttempts,
+    setResetGame,
     setDifficulty
   } = gameInformation
 
-  const handleDifficultyInformation = (difficulty = '') => {
-    if (!difficulty) return
-    const defaultDifficulty = difficulty.toUpperCase()
-    const difficultyName = DEFAULT_DIFFICULTIES[defaultDifficulty][0]
-    const difficultyAttempts = DEFAULT_DIFFICULTIES[defaultDifficulty][1]
+  const handleDifficultyInformation = useCallback(
+    (difficulty = '') => {
+      if (!difficulty) return
+      const defaultDifficulty = difficulty.toUpperCase()
+      const difficultyName = DEFAULT_DIFFICULTIES[defaultDifficulty][0]
+      const difficultyAttempts = DEFAULT_DIFFICULTIES[defaultDifficulty][1]
 
-    setAttempts(difficultyAttempts)
-    setDifficulty(difficultyName)
+      setAttempts(difficultyAttempts)
+      setDifficulty(difficultyName)
+    },
+    [difficulty]
+  )
+
+  const updateBlundersAndHits = useCallback(
+    matches => {
+      matches ? setHits(hits + 1) : setBlunders(blunders + 1)
+    },
+    [hits, blunders]
+  )
+
+  useEffect(() => {
+    if (resetGame) return setResetGame(false)
+    if (blunders < attempts && hits === 8) {
+      setWin(true)
+      setResetGame(true)
+    }
+    if (blunders >= attempts) {
+      setAttempts(0)
+      setBlunders(0)
+      setHits(0)
+      setDifficulty('')
+      setResetGame(true)
+      setWin(false)
+    }
+  }, [blunders, hits])
+
+  return {
+    win,
+    hits,
+    attempts,
+    blunders,
+    resetGame,
+    difficulty,
+    handleDifficultyInformation,
+    updateBlundersAndHits
   }
-
-  return { hits, blunders, difficulty, attempts, handleDifficultyInformation }
 }

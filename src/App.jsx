@@ -8,10 +8,10 @@ function App () {
   return (
     <main className='main'>
       <h1>Memorama</h1>
-      <div className='cards-container'>
-        <Cards />
-      </div>
       <GameInformationProvider>
+        <div className='cards-container'>
+          <Cards />
+        </div>
         <GameInformation />
         <LockScreen />
       </GameInformationProvider>

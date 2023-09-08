@@ -1,5 +1,6 @@
 import { useGameInformationManagement } from '../../hooks/useGameInformationManagement'
-import './Difficulties.css'
+import { DEFAULT_DIFFICULTIES } from '../../utils/difficulties'
+import DifficultyButton from './DifficultyButton'
 export default function Difficulties () {
   const { handleDifficultyInformation } = useGameInformationManagement()
 
@@ -9,18 +10,13 @@ export default function Difficulties () {
 
   return (
     <>
-      <button className='btn-difficulty' onClick={handleDifficulty}>
-        Insane
-      </button>
-      <button className='btn-difficulty' onClick={handleDifficulty}>
-        Hard
-      </button>
-      <button className='btn-difficulty' onClick={handleDifficulty}>
-        Normal
-      </button>
-      <button className='btn-difficulty' onClick={handleDifficulty}>
-        Easy
-      </button>
+      {Object.values(DEFAULT_DIFFICULTIES).map(([difficulty, _]) => (
+        <DifficultyButton
+          key={difficulty}
+          difficulty={difficulty}
+          handleDifficulty={handleDifficulty}
+        />
+      ))}
     </>
   )
 }
